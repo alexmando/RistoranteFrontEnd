@@ -1,1 +1,9 @@
-<p>reservations-list.component works!</p>
+<mat-list>
+  <mat-list-item *ngFor="let r of reservations">
+    <h3 mat-line>Tavolo {{ r.tableId }}</h3>
+    <p mat-line>{{ r.date }} alle {{ r.time }}</p>
+    <button mat-icon-button (click)="delete(r.id)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
