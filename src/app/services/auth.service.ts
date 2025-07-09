@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth'; // Modifica con il tuo endpoint
+  private apiUrl = 'http://localhost:3000/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -12,11 +12,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, { username, password });
   }
 
-  register(username: string, password: string, email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { username, password, email });
-  }
-
-  logout(): void {
-    localStorage.removeItem('auth_token'); // Esempio: gestione token
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, userData);
   }
 }
