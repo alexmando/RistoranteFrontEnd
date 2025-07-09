@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReservationService } from '../services/reservation.service';
+import { ReservationService } from '../../services/reservation.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reservation-form',
+  standalone : true,
+  imports: [FormsModule],
   template: `
     <h2>Nuova Prenotazione</h2>
     <form (ngSubmit)="submit()">
