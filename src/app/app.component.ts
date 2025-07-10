@@ -3,8 +3,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   standalone: false,
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  template: `
+    <app-navbar></app-navbar>
+    <router-outlet></router-outlet>  <!-- 👈 Punto di inserimento per le route -->
+    <app-footer></app-footer>
+  `
   
 })
 export class AppComponent {

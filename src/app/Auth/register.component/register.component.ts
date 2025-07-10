@@ -31,7 +31,7 @@ export class RegisterComponent {
   register() {
     this.auth.register(this.user).subscribe({
       next: () => this.router.navigate(['/login']),
-      error: (err) => console.error('Registrazione fallita', err)
+      error: (err: any) => console.error('Registrazione fallita', err)
     });
   }
 }

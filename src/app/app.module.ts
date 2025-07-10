@@ -11,20 +11,29 @@ import { AuthService } from './services/auth.service';
 import { AppRoutingModule } from './app-routing.module';
 import { PrenotazioneComponent } from './prenotazione/prenotazione.component';
 import { PrenotazioneService } from './services/prenotazione.service';
+import { CommonModule } from '@angular/common';
+import { NavbarComponent } from './navbar.component/navbar.component';
+import { HomeComponent } from './home.component/home.component';
+import { FooterComponent } from './footer.component/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    NavbarComponent,
+    HomeComponent,
     RegisterComponent, 
-    PrenotazioneComponent
+    PrenotazioneComponent, 
+    FooterComponent
   ],
   imports: [
+    CommonModule, 
     BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+     RouterModule.forRoot([])
   ],
   providers: [
     AuthService,    

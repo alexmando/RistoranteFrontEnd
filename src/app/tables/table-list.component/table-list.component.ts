@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { TableService } from '../../services/table.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-list',
+  imports: [CommonModule],
   template: `
     <h2>Tavoli Disponibili</h2>
     <ul>

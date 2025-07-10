@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ReservationService } from '../../services/reservation.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reservation-list',
+  imports: [CommonModule],
   template: `
     <h2>Lista Prenotazioni</h2>
     <ul>
