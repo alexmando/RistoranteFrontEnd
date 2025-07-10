@@ -25,9 +25,14 @@ export class LoginComponent {
   constructor(private auth: AuthService, private router: Router) {}
 
   login() {
-    this.auth.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: (err) => console.error('Login fallito', err)
-    });
-  }
+  this.auth.login(this.username, this.password).subscribe({
+    next: () => {
+      // Gestisci il successo (il reindirizzamento è già nell'AuthService)
+    },
+    error: (err) => {
+      console.error('Login failed:', err);
+      // Mostra messaggio all'utente
+    }
+  });
+}
 }

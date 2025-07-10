@@ -16,6 +16,9 @@ import { NavbarComponent } from './navbar.component/navbar.component';
 import { HomeComponent } from './home.component/home.component';
 import { FooterComponent } from './footer.component/footer.component';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth/interceptor.component/interceptor.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,11 +36,16 @@ import { FooterComponent } from './footer.component/footer.component';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-     RouterModule.forRoot([])
+     RouterModule.forRoot([{ path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },])
   ],
   providers: [
     AuthService,    
-    PrenotazioneService  
+    PrenotazioneService,
+    {
+    provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true}
   ],
   bootstrap: [AppComponent]
 })

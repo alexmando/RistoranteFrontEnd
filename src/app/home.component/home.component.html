@@ -1,1 +1,12 @@
-<p>home.component works!</p>
+<div class="container">
+  <h1>Benvenuto</h1>
+  <div *ngIf="!authService.isLoggedIn()">
+    <p>Accedi o registrati per continuare</p>
+    <a routerLink="/login" class="btn btn-primary mr-2">Login</a>
+    <a routerLink="/register" class="btn btn-secondary">Registrati</a>
+  </div>
+  <div *ngIf="authService.isLoggedIn()">
+    <p>Sei loggato come {{ authService.currentUserValue?.username }}</p>
+    <a routerLink="/dashboard" class="btn btn-success">Vai alla Dashboard</a>
+  </div>
+</div>

@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
   template: `
     <div class="register-container">
       <h2>Registrazione</h2>
-      <form (ngSubmit)="register()">
+      <form (ngSubmit)="onRegister()">
         <input [(ngModel)]="user.username" name="username" placeholder="Username" required>
         <input [(ngModel)]="user.email" name="email" type="email" placeholder="Email" required>
         <input [(ngModel)]="user.password" name="password" type="password" placeholder="Password" required>
@@ -28,10 +28,12 @@ export class RegisterComponent {
 
   constructor(private auth: AuthService, private router: Router) {}
 
-  register() {
+  onRegister() {
     this.auth.register(this.user).subscribe({
       next: () => this.router.navigate(['/login']),
       error: (err: any) => console.error('Registrazione fallita', err)
     });
   }
+
+  
 }
