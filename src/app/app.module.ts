@@ -9,12 +9,15 @@ import { LoginComponent } from './auth/login.component/login.component';
 import { RegisterComponent } from './auth/register.component/register.component';
 import { AuthService } from './services/auth.service';
 import { AppRoutingModule } from './app-routing.module';
+import { PrenotazioneComponent } from './prenotazione/prenotazione.component';
+import { PrenotazioneService } from './services/prenotazione.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent, 
+    PrenotazioneComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +26,10 @@ import { AppRoutingModule } from './app-routing.module';
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,    
+    PrenotazioneService  
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

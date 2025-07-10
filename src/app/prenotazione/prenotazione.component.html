@@ -1,0 +1,27 @@
+<div class="container">
+  <h2>Nuova Prenotazione</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Data:</label>
+      <input 
+        type="datetime-local" 
+        class="form-control" 
+        [(ngModel)]="dataPrenotazione" 
+        name="data"
+        required
+      >
+    </div>
+    <div class="form-group">
+      <label>Numero ospiti:</label>
+      <input 
+        type="number" 
+        class="form-control" 
+        [(ngModel)]="numeroOspiti" 
+        name="numeroOspiti"
+        min="1"
+        required
+      >
+    </div>
+    <button type="submit" class="btn btn-primary">Prenota</button>
+  </form>
+</div>
