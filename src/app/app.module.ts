@@ -31,8 +31,8 @@ import { AuthInterceptor } from './auth/interceptor.component/interceptor.compon
   ],
   imports: [
     CommonModule, 
-    BrowserModule,
     HttpClientModule,
+    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,

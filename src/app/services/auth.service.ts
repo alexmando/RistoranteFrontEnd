@@ -66,7 +66,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private API_URL = 'http://localhost:8080'; // Assicurati che corrisponda al tuo backend
+  private API_URL = 'http://localhost:8080/api/auth'; // Assicurati che corrisponda al tuo backend
   private loggedInSubject = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient, private router: Router) {
