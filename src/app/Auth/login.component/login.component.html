@@ -1,15 +1,25 @@
-<div class="container">
-  <h2>Login</h2>
-  <form (ngSubmit)="login()" #loginForm="ngForm">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" [(ngModel)]="username" name="username" required class="form-control">
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Login</div>
+        <div class="card-body">
+          <form (ngSubmit)="login()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" [(ngModel)]="username" name="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" [(ngModel)]="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Accedi</button>
+          </form>
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+            {{ errorMessage }}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" [(ngModel)]="password" name="password" required class="form-control">
-    </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">Login</button>
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
-  </form>
+  </div>
 </div>
