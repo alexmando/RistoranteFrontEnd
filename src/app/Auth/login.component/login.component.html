@@ -2,22 +2,77 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">Login</div>
+        <div class="card-header bg-primary text-white">
+          <h3 class="text-center">Accedi al tuo account</h3>
+        </div>
         <div class="card-body">
-          <form (ngSubmit)="login()">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" [(ngModel)]="username" name="username" required>
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
             </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email"
+                formControlName="email"
+                [ngClass]="{
+                  'is-invalid': loginForm.get('email')?.invalid && 
+                              (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
+                }"
+                placeholder="Inserisci la tua email">
+              
+              <div *ngIf="loginForm.get('email')?.invalid && 
+                          (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" 
+                   class="invalid-feedback">
+                <div *ngIf="loginForm.get('email')?.errors?.['required']">
+                  Email obbligatoria
+                </div>
+                <div *ngIf="loginForm.get('email')?.errors?.['email']">
+                  Inserisci un'email valida
+                </div>
+              </div>
+            </div>
+
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" [(ngModel)]="password" name="password" required>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password"
+                formControlName="password"
+                [ngClass]="{
+                  'is-invalid': loginForm.get('password')?.invalid && 
+                              (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)
+                }"
+                placeholder="Inserisci la tua password">
+              
+              <div *ngIf="loginForm.get('password')?.invalid && 
+                          (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" 
+                   class="invalid-feedback">
+                Password obbligatoria
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary">Accedi</button>
+
+            <div class="d-grid">
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [disabled]="loginForm.invalid || loading">
+                <span *ngIf="!loading">Accedi</span>
+                <span *ngIf="loading">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Caricamento...
+                </span>
+              </button>
+            </div>
+
+            <div class="mt-3 text-center">
+              <p>Non hai un account? <a routerLink="/register">Registrati</a></p>
+            </div>
           </form>
-          <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-            {{ errorMessage }}
-          </div>
         </div>
       </div>
     </div>

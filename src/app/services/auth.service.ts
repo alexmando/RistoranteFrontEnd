@@ -1,124 +1,104 @@
-/*import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-  private API_URL = 'http://localhost:8080/auth';
-  private loggedInSubject = new BehaviorSubject<boolean>(false);
-
-  constructor(private http: HttpClient, private router: Router) {
-    // Verifica lo stato iniziale al caricamento del servizio
-    this.checkToken();
-  }
-
-   // Verifica presenza token valido
-  private checkToken(): void {
-    const token = localStorage.getItem('auth_token');
-    this.loggedInSubject.next(!!token);
-  }
-
-   // Metodo pubblico per verificare lo stato di login
-  isLoggedIn(): boolean { 
-    return this.loggedInSubject.value;
-  }
-
-  // Observable per chi vuole sottoscrivere lo stato
-  get isLoggedIn$(): Observable<boolean> {
-    return this.loggedInSubject.asObservable();
-  }
-
-   login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/login`, { username, password }).pipe(
-      tap((response: any) => {
-        if (response.token) {
-          localStorage.setItem('auth_token', response.token);
-          this.loggedInSubject.next(true);
-        }
-      })
-    );
-  }
-
-  logout() {
-    localStorage.removeItem('currentUser');
-    this.loggedInSubject.next(false);
-    this.router.navigate(['/login']);
-  }
-
-  get currentUserValue() {
-    return this.loggedInSubject.value;
-  }
-
-  register(user: any): Observable<any> {
-  return this.http.post(`${this.API_URL}/register`, user);
-}
-}*/
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Observable, map } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private API_URL = 'http://localhost:8080/api/auth'; // Assicurati che corrisponda al tuo backend
-  private loggedInSubject = new BehaviorSubject<boolean>(false);
+  private baseUrl = 'http://localhost:8080/auth/';
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.checkToken();
-  }
+  constructor(private http: HttpClient) { }
 
-  // Metodi pubblici
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/login`, { username, password }).pipe(
-      tap((response: any) => {
-        if (response.token) {
-          this.handleAuthentication(response.token);
+  // Usa EMAIL per il login
+  login(email: string, password: string): Observable<string> {
+    return this.http.post(
+      `${this.baseUrl}login`, 
+      { email, password },  // Invia email invece di username
+      { responseType: 'text' }
+    ).pipe(
+      map((response: string) => {
+        // Estrae il token da "Bearer <token>"
+        if (response.startsWith("Bearer ")) {
+          return response.split(" ")[1];
         }
+        throw new Error('Formato token non valido');
       })
     );
   }
 
-  register(user: { username: string, password: string }): Observable<any> {
-    return this.http.post(`${this.API_URL}/register`, user);
+  // Registrazione con email
+  register(username: string, email: string, password: string): Observable<any> {
+  return this.http.post(`${this.baseUrl}register`, { username, email, password })
+    .pipe(
+      catchError(error => {
+        // Estrai il messaggio d'errore dal backend
+        let errorMsg = 'Errore sconosciuto durante la registrazione';
+        
+        if (error.error instanceof ErrorEvent) {
+          // Errore lato client
+          errorMsg = `Errore: ${error.error.message}`;
+        } else if (error.status === 400) {
+          // Errore di validazione
+          errorMsg = error.error?.message || 'Dati non validi';
+        } else if (error.status === 409) {
+          // Conflitto (es. email già esistente)
+          errorMsg = error.error?.message || 'Email o username già in uso';
+        } else if (error.status) {
+          // Altri errori HTTP
+          errorMsg = `Errore ${error.status}: ${error.error?.message || error.statusText}`;
+        }
+        
+        return throwError(() => new Error(errorMsg));
+      })
+    );
+}
+
+  // Resto del codice invariato...
+  saveToken(token: string): void {
+    localStorage.setItem('auth-token', token);
   }
 
-  logout(): void {
-    this.clearAuthentication();
-    this.router.navigate(['/login']);
+  getUserFromToken(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64));
+    } catch (e) {
+      console.error('Errore decodifica token', e);
+      return null;
+    }
   }
 
-  isLoggedIn(): boolean {
-    return this.loggedInSubject.value;
-  }
-
-  get isLoggedIn$(): Observable<boolean> {
-    return this.loggedInSubject.asObservable();
+  saveUser(token: string): void {
+    const userData = this.getUserFromToken(token);
+    if (userData) {
+      localStorage.setItem('auth-user', JSON.stringify({
+        username: userData.username,
+        email: userData.email,
+        roles: userData.roles
+      }));
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('auth-token');
   }
 
-  // Metodi privati
-  private handleAuthentication(token: string): void {
-    localStorage.setItem('auth_token', token);
-    this.loggedInSubject.next(true);
-    this.router.navigate(['/']); // Reindirizza alla home dopo il login
+  getUser(): any {
+    const user = localStorage.getItem('auth-user');
+    return user ? JSON.parse(user) : null;
   }
 
-  private clearAuthentication(): void {
-    localStorage.removeItem('auth_token');
-    this.loggedInSubject.next(false);
+  isLoggedIn(): boolean {
+    return this.getToken() !== null;
   }
 
-  private checkToken(): void {
-    const token = this.getToken();
-    this.loggedInSubject.next(!!token);
+  logout(): void {
+    localStorage.removeItem('auth-token');
+    localStorage.removeItem('auth-user');
   }
 }
