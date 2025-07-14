@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     // Test di connessione al backend
-    this.http.get('http://localhost:8080/auth/').subscribe({
+    this.http.get('http://localhost:8080/').subscribe({
       next: (res) => {
         console.log('Backend raggiungibile', res);
       },
