@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
   registerForm: FormGroup;
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -27,22 +27,13 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      
+      
     });
   }
 
-  ngOnInit() {
-    // Test di connessione al backend
-    this.http.get('http://localhost:8080/').subscribe({
-      next: (res) => {
-        console.log('Backend raggiungibile', res);
-      },
-      error: (err) => {
-        console.error('Problema di connessione al backend', err);
-        this.errorMessage = 'Impossibile connettersi al server. Riprova più tardi.';
-      }
-    });
-  }
+
 
   register() {
     if (this.registerForm.invalid) {
@@ -68,84 +59,26 @@ export class RegisterComponent implements OnInit {
     
     const { username, email, password } = this.registerForm.value;
 
-    this.auth.register(username, email, password).subscribe({
-      next: (response) => {
-        this.loading = false;
-        if (response && response.success) {
-          this.successMessage = 'Registrazione completata con successo!';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        } else {
-          this.errorMessage = response?.message || 'Registrazione fallita';
-        }
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Registration failed:', err);
-        this.errorMessage = typeof err === 'string' ? err : 
-                          err.message || 'Errore durante la registrazione';
-      }
-    });
+   this.auth.register(username, email, password).subscribe({
+  next: (response) => {
+    this.loading = false;
+    
+    // Verifica che la risposta sia valida (puoi anche controllare statusCode se disponibile)
+    if (response && typeof response === 'object' && !response.message) {
+      this.successMessage = 'Registrazione completata con successo!';
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 2000);
+    } else {
+      this.errorMessage = response?.message || 'Registrazione fallita';
+    }
+  },
+  error: (err) => {
+    this.loading = false;
+    console.error('Registration failed:', err);
+    this.errorMessage = typeof err === 'string' ? err : 
+                        err.message || 'Errore durante la registrazione';
+  }
+});
   }
 }
-  /*
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-@Component({
-  selector: 'app-register',
-  standalone : false, 
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
-})
-export class RegisterComponent {
-  registerForm: FormGroup;
-  errorMessage: string | null = null;
-  successMessage: string | null = null;
-  loading = false;
-
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
-    
-  ) {
-    this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-
-  }
-
-  register() {
-    if (this.registerForm.invalid) {
-      return;
-    }
-
-    this.loading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-    
-    const { username, email, password } = this.registerForm.value;
-
-    this.auth.register(username, email, password).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.successMessage = 'Registrazione completata con successo!';
-        
-        // Reindirizza al login dopo 2 secondi
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Registration failed:', err);
-        this.errorMessage = err.error?.message || 'Errore durante la registrazione';
-      }
-    });
-  }
-}*/

@@ -14,25 +14,30 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   // Usa EMAIL per il login
-  login(email: string, password: string): Observable<string> {
-    return this.http.post(
-      `${this.baseUrl}login`, 
-      { email, password },  // Invia email invece di username
-      { responseType: 'text' }
-    ).pipe(
-      map((response: string) => {
-        // Estrae il token da "Bearer <token>"
-        if (response.startsWith("Bearer ")) {
-          return response.split(" ")[1];
-        }
-        throw new Error('Formato token non valido');
-      })
-    );
-  }
+  login(email: string, password: string, username: string): Observable<string> {
+  const role = 'USER';
+
+  // ⬇ 1) indichiamo il tipo di risposta: { token: string }
+  return this.http.post<{ token: string }>(
+    `${this.baseUrl}login`,
+    { email, password, username, role }      // corpo della richiesta
+  ).pipe(
+    // ⬇ 2) estraiamo il token vero e proprio
+    map(res => {
+      const bearer = res.token;              // es. "Bearer eyJhbGciOi..."
+      if (bearer && bearer.startsWith('Bearer ')) {
+        return bearer.split(' ')[1];         // ⇒ "eyJhbGciOi..."
+      }
+      throw new Error('Formato token non valido');
+    })
+  );
+}
+
 
   // Registrazione con email
   register(username: string, email: string, password: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}register`, { username, email, password })
+    const role = 'USER';
+  return this.http.post(`${this.baseUrl}register`, { username, email, password, role })
     .pipe(
       catchError(error => {
         // Estrai il messaggio d'errore dal backend

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -19,6 +18,8 @@ import { FooterComponent } from './footer.component/footer.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/interceptor.component/interceptor.component';
 
+import { provideHttpClient, withFetch } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,6 @@ import { AuthInterceptor } from './auth/interceptor.component/interceptor.compon
   ],
   imports: [
     CommonModule, 
-    HttpClientModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -42,6 +42,7 @@ import { AuthInterceptor } from './auth/interceptor.component/interceptor.compon
   providers: [
     AuthService,    
     PrenotazioneService,
+    provideHttpClient(withFetch()),  // 👍 Questo abilita Fetch API con supporto credenziali
     {
     provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

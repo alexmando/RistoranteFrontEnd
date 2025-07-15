@@ -21,7 +21,8 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required], 
+      username: ['']
     });
   }
 
@@ -30,13 +31,15 @@ export class LoginComponent {
       return;
     }
 
+    const role = 'USER';
+
     this.loading = true;
     this.errorMessage = null;
     
-    const { email, password } = this.loginForm.value;
+    const { email, password, username } = this.loginForm.value;
 
-    this.auth.login(email, password).subscribe({
-      next: (token) => {
+    this.auth.login(email, password, username).subscribe({
+      next: (token) =>{
         this.auth.saveToken(token);
         this.auth.saveUser(token);
         this.loading = false;
