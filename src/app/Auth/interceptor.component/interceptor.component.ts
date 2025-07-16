@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor,
   HttpRequest,
   HttpHandler,
-  HttpEvent
+  HttpEvent,
+  HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -13,24 +13,28 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private auth: AuthService) {}
 
+ // Aggiungi queste regex per gestire meglio gli URL esclusi
+  private excludedUrls = [
+    /\/auth\/login$/,
+    /\/auth\/register$/,
+    /\/auth\/refresh-token$/
+  ];
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let cloned = req;
+    
+    const token = this.auth.getToken(); // <-- già "Bearer eyJ..."
 
-    // 1. Aggiungi il Bearer token se presente
-    const token = this.auth.getToken();
-    if (token) {
-      cloned = cloned.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-    }
-
-    // 2. Spedisci eventuali cookie (solo se il backend li usa)
-    cloned = cloned.clone({
-      withCredentials: true      // XHR‑friendly, niente NG02818
+  if (token) {
+    const cloned = req.clone({
+      setHeaders: {
+        Authorization: token
+      }
     });
-
     return next.handle(cloned);
   }
+
+  return next.handle(req);
+  }
+
+  
 }

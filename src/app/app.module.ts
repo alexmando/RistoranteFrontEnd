@@ -43,10 +43,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     AuthService,    
     PrenotazioneService,
     provideHttpClient(withFetch()),  // 👍 Questo abilita Fetch API con supporto credenziali
-    {
-    provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

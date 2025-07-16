@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  standalone : false, 
+  standalone: false, 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -15,7 +15,7 @@ export class LoginComponent {
   loginForm: FormGroup;
 
   constructor(
-    private auth: AuthService, 
+    private authService: AuthService, 
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -31,24 +31,28 @@ export class LoginComponent {
       return;
     }
 
-    const role = 'USER';
-
     this.loading = true;
     this.errorMessage = null;
     
     const { email, password, username } = this.loginForm.value;
 
-    this.auth.login(email, password, username).subscribe({
-      next: (token) =>{
-        this.auth.saveToken(token);
-        this.auth.saveUser(token);
+    this.authService.login(email, password, username).subscribe({
+      next: (token) => {
+        // Non serve più chiamare saveToken e saveUser separatamente
+        // perché ora sono gestiti internamente dal servizio durante il login
         this.loading = false;
-        this.router.navigate(['/home']);
+        
+        // Verifica se l'utente è autenticato prima del redirect
+        if (this.authService.isLoggedIn()) {
+          this.router.navigate(['/home']);
+        } else {
+          this.errorMessage = 'Errore durante il login';
+        }
       },
       error: (err) => {
         this.loading = false;
         console.error('Login failed:', err);
-        this.errorMessage = 'Email o password non validi';
+        this.errorMessage = err.message || 'Email o password non validi';
       }
     });
   }
