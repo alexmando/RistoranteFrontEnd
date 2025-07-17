@@ -23,25 +23,23 @@ export class AuthService {
    * Effettua il login e salva il token JWT
    */
   login(email: string, password: string, username?: string): Observable<string> {
-   return this.http.post<{ accessToken: string }>( // ← Corretto il nome della proprietà
+   return this.http.post<{ accessToken: string }>( 
     `${this.baseUrl}login`,
     { email, password, username }
   ).pipe(
     map(response => {
-      // 1. Verifica esistenza token
-      if (!response.accessToken) { // ← Usa accessToken
+      //Verifica esistenza token
+      if (!response.accessToken) { 
         throw new Error('Token non ricevuto dal server');
       }
       
-      // 2. Estrai token (rimuovi 'Bearer ' se presente)
+      //Estrai token (rimuovi 'Bearer ' se presente)
       const token = response.accessToken.startsWith('Bearer ')
          ? response.accessToken
          : `Bearer ${response.accessToken}`;
       
-      // 3. DEBUG: Verifica token
-      console.log('🔑 Token ricevuto:', token);
-      
-      // 4. Salva nel localStorage
+      console.log(' Token ricevuto:', token);
+      //token salvato
       this.saveAuthData(token);
       return token;
     }),
@@ -62,22 +60,19 @@ export class AuthService {
       );
   }
 
-  /**
-   * Salva i dati di autenticazione nel localStorage
-   */
  /**
  * Salva il token e (opzionalmente) decodifica il payload JWT.
- * Se il token non è un JWT valido, salva solo la stringa grezza.
+ * Se il token non è un JWT valido, non fa niente
  */
 private saveAuthData(token: string): void {
   if (!token || typeof token !== 'string') {
-    console.error('❌ Token non valido');
+    console.error(' Token non valido');
     return;
   }
 
   // 1. Salva il token così com'è
   localStorage.setItem(this.tokenKey, token);
-  console.log('🔑 Token salvato:', token);
+  console.log(' Token salvato:', token);
 
   // 2. Prova a decodificare il payload (se è un JWT)
   const payload = this.decodeToken(token);
@@ -88,28 +83,20 @@ private saveAuthData(token: string): void {
       email: payload.sub,
       roles: payload.roles || ['USER'] // Default per sicurezza
     }));
-  } else {
-    // 4. Se NON è un JWT, imposta dati utente minimi
-    localStorage.setItem(this.userKey, JSON.stringify({
-      roles: ['USER'] // Ruolo di fallback
-    }));
-  }
+  } 
 }
 
-/**
- * Decodifica un token JWT standard (Base64Url).
- * Restituisce `null` se il token non è un JWT valido.
- */
+ //Decodifica un token JWT 
 private decodeToken(token: string): any | null {
   try {
-    // 1. Verifica se è un JWT (formato: header.payload.firma)
+    // 1. Verifica se è un JWT 
     const parts = token.split('.');
     if (parts.length !== 3) {
-      console.warn('⚠️ Token non è un JWT valido (mancano parti)');
+      console.warn(' Token non è un JWT valido (mancano parti)');
       return null;
     }
 
-    // 2. Decodifica il payload (parte Base64Url)
+    // 2. Decodifica il payload
     const base64Url = parts[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const decoded = atob(base64);
@@ -117,13 +104,13 @@ private decodeToken(token: string): any | null {
 
     // 3. Verifica presenza campi obbligatori
     if (!payload.sub && !payload.userId) {
-      console.warn('⚠️ JWT senza "sub" o "userId"');
+      console.warn(' JWT senza "sub" o "userId"');
     }
 
     return payload;
 
   } catch (error) {
-    console.error('❌ Errore decodifica token:', error);
+    console.error(' Errore decodifica token:', error);
     return null; // Non è un JWT valido
   }
 }
@@ -162,9 +149,9 @@ private decodeToken(token: string): any | null {
   }
   
 
-  /**
-   * Effettua il logout
-   */
+  
+   //Effettua il logout
+   
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);

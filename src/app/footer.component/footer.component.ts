@@ -4,11 +4,35 @@ import { Component } from '@angular/core';
   selector: 'app-footer',
   standalone : false,
   template: `
-    <footer class="mt-5 py-3 bg-light text-center">
-      <div class="container">
-        <span class="text-muted">© 2023 Ristorante App</span>
-      </div>
-    </footer>
+    <footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Ristorante Mandolito</h3>
+      <p>Via montesanto, 123</p>
+      <p>87100 Cosenza, Italia</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Orari</h3>
+      <p>Lun-Sab: 12:00 - 15:00, 19:00 - 23:00</p>
+      <p>Domenica: 19:00 - 23:00</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Contatti</h3>
+      <p><i class="fas fa-phone"></i> +39 011 1234567</p>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; 2023 Ristorante Mandolito. Tutti i diritti riservati.</p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+  </div>
+</footer>
   `
 })
 export class FooterComponent {}
