@@ -14,8 +14,9 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar.component/navbar.component';
 import { HomeComponent } from './home.component/home.component';
 import { FooterComponent } from './footer.component/footer.component';
+import { MiePrenotazioneComponent } from './MiePrenotazione.component/prenotazione.component';
 
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthInterceptor } from './auth/interceptor.component/interceptor.component';
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -28,7 +29,8 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     HomeComponent,
     RegisterComponent, 
     PrenotazioneComponent, 
-    FooterComponent
+    FooterComponent,
+    MiePrenotazioneComponent
   ],
   imports: [
     CommonModule, 
@@ -42,7 +44,8 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
   providers: [
     AuthService,    
     PrenotazioneService,
-    provideHttpClient(withFetch()),  
+    provideHttpClient(withFetch(),                
+      withInterceptorsFromDi() ),  
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

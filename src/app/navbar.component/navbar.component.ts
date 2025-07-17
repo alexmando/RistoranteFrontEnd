@@ -6,17 +6,34 @@ import { Router } from '@angular/router';
   selector: 'app-navbar',
   standalone: false,
   template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" routerLink="/home">Ristorante</a> <!-- Cambiato in /home -->
-        <div class="navbar-nav">
-          <a class="nav-link" routerLink="/login" *ngIf="!auth.isLoggedIn()">Login</a>
-          <a class="nav-link" routerLink="/register" *ngIf="!auth.isLoggedIn()">Registrati</a> <!-- Cambiato da /registrazione a /register -->
-          <a class="nav-link" routerLink="/prenotazioni" *ngIf="auth.isLoggedIn()">Prenotazioni</a>
-          <button class="btn btn-link nav-link" (click)="logout()" *ngIf="auth.isLoggedIn()">Logout</button>
-        </div>
-      </div>
-    </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">Ristorante</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" *ngIf="!auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/login">Login</a>
+        </li>
+        <li class="nav-item" *ngIf="!auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/register">Registrati</a>
+        </li>
+
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/mie-prenotazioni">
+            <i class="fas fa-calendar-check me-1"></i>
+            Le mie prenotazioni
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <button class="btn btn-link nav-link" (click)="logout()">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
   `
 })
 export class NavbarComponent {

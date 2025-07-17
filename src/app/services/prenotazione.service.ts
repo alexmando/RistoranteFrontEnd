@@ -27,7 +27,7 @@ export class PrenotazioneService {
     const prenotazioneDTO = {
       dataPrenotazione: data,
       numeroPersone: numeroOspiti,
-      utenteId: this.authService.getUser()?.id
+      userId: this.authService.getUser()?.id
     };
 
     return this.http.post(`${this.apiUrl}prenotazioni`, prenotazioneDTO).pipe(
@@ -81,4 +81,32 @@ export class PrenotazioneService {
         return `Errore ${error.status}: ${error.message || 'Si è verificato un errore sconosciuto.'}`;
     }
   }
+
+  getUserReservations(userId: string): Observable<any> {
+  if (!this.authService.isLoggedIn()) {
+    this.router.navigate(['/login']);
+    return throwError(() => new Error('Utente non autenticato'));
+  }
+
+  const token = this.authService.getToken(); // Assumi che il token sia disponibile così
+  const headers = { 'Authorization': `Bearer ${token}` };
+
+  return this.http.get(`${this.apiUrl}prenotazioni/user/${userId}`, { headers }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      const errorMessage = this.handleError(error);
+
+      if (error.status === 401 || error.status === 403) {
+        this.authService.logout();
+        this.router.navigate(['/login'], {
+          queryParams: {
+            returnUrl: this.router.url,
+            error: errorMessage
+          }
+        });
+      }
+      return throwError(() => errorMessage);
+    })
+  );
+}
+
 }

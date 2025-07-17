@@ -1,0 +1,16 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Le tue prenotazioni</h2>
+
+  <div *ngIf="userReservations.length === 0" class="alert alert-info">
+    Nessuna prenotazione trovata.
+  </div>
+
+  <div *ngFor="let p of userReservations" class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">📅 {{ p.dataPrenotazione | date:'mediumDate' }}</h5>
+      <p class="card-text">👥 Ospiti: {{ p.numeroPersone }}</p>
+      <p class="card-text"><small class="text-muted">ID: {{ p.id }}</small></p>
+    </div>
+  </div>
+</div>
+
