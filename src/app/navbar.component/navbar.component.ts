@@ -37,10 +37,10 @@ import { Router } from '@angular/router';
   `
 })
 export class NavbarComponent {
-  constructor(public auth: AuthService, private router: Router) {} // Aggiunto Router
+  constructor(public auth: AuthService, private router: Router) {} 
 
   logout() {
     this.auth.logout();
-    this.router.navigate(['/login']); // Doppio controllo per il reindirizzamento
+    this.router.navigate(['/login']);
   }
 }

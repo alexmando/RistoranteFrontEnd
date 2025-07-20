@@ -7,7 +7,7 @@ import { ApplicationConfig } from '@angular/core';
   standalone: false,
   template: `
     <app-navbar></app-navbar>
-    <router-outlet></router-outlet>  <!-- 👈 Punto di inserimento per le route -->
+    <router-outlet></router-outlet> 
     <app-footer></app-footer>
   `
   

@@ -20,12 +20,12 @@ import { Component } from '@angular/core';
     
     <div class="footer-section">
       <h3>Contatti</h3>
-      <p><i class="fas fa-phone"></i> +39 011 1234567</p>
+      <p><i class="fas fa-phone"></i> +39 333 7719171</p>
     </div>
   </div>
   
   <div class="footer-bottom">
-    <p>&copy; 2023 Ristorante Mandolito. Tutti i diritti riservati.</p>
+    <p>&copy; 2025 Ristorante Mandolito. Tutti i diritti riservati.</p>
     <div class="social-icons">
       <a href="#"><i class="fab fa-facebook"></i></a>
       <a href="#"><i class="fab fa-instagram"></i></a>

@@ -38,8 +38,6 @@ export class LoginComponent {
 
     this.authService.login(email, password, username).subscribe({
       next: (token) => {
-        // Non serve più chiamare saveToken e saveUser separatamente
-        // perché ora sono gestiti internamente dal servizio durante il login
         this.loading = false;
         
         // Verifica se l'utente è autenticato prima del redirect

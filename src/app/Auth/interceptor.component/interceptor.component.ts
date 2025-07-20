@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private auth: AuthService) {}
 
- // Aggiungi queste regex per gestire meglio gli URL esclusi
+ 
   private excludedUrls = [
     /\/auth\/login$/,
     /\/auth\/register$/,
@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-    const token = this.auth.getToken(); // <-- già "Bearer eyJ..."
+    const token = this.auth.getToken();
 
   if (token) {
     const cloned = req.clone({

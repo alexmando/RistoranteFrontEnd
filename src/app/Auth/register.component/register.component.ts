@@ -60,10 +60,9 @@ export class RegisterComponent {
     const { username, email, password } = this.registerForm.value;
 
    this.auth.register(username, email, password).subscribe({
-  next: (response) => {
+    next: (response) => {
     this.loading = false;
     
-    // Verifica che la risposta sia valida (puoi anche controllare statusCode se disponibile)
     if (response && typeof response === 'object' && !response.message) {
       this.successMessage = 'Registrazione completata con successo!';
       setTimeout(() => {
